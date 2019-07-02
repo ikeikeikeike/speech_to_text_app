@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
+//import 'package:flutter/foundation.dart';
 //import 'dart:developer';
 
 enum TabsStyle { none }
@@ -15,15 +16,14 @@ const List<_Page> _allPages = <_Page>[
   _Page(icon: Icons.playlist_add, text: 'NOTE'),
 ];
 
-class ScrollableTabs extends StatefulWidget {
-  static const String routeName = '/scrollable-tabs';
+class Home extends StatefulWidget {
+  static const String routeName = '/home';
 
   @override
-  ScrollableTabsState createState() => ScrollableTabsState();
+  HomeState createState() => HomeState();
 }
 
-class ScrollableTabsState extends State<ScrollableTabs>
-    with SingleTickerProviderStateMixin {
+class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _controller;
 
   @override
@@ -84,28 +84,6 @@ class ScrollableTabsState extends State<ScrollableTabs>
             ),
           );
         }).toList(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (int idx) {
-          setState(() {
-            currentIndex = idx;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            title: new Text('Messages'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.person),
-            title: new Text('Profile'),
-          )
-        ],
       ),
     );
   }
