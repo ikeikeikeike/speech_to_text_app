@@ -13,7 +13,7 @@ class Message extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pushNamed('/screen3');
             },
-            child: const Text('Go to Screen 3'),
+            child: const Text('Go to Screen 3 from message'),
           ),
         ));
   }

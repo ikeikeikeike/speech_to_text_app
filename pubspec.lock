@@ -88,6 +88,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_gallery_assets:
+    dependency: "direct main"
+    description:
+      name: flutter_gallery_assets
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.8"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -420,3 +427,4 @@ packages:
     version: "2.1.16"
 sdks:
   dart: ">=2.2.0 <3.0.0"
+  flutter: ">=0.1.0 <2.0.0"

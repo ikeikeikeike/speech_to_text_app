@@ -10,7 +10,7 @@ import 'ui/profile/profile.dart';
 
 class App extends StatelessWidget {
   static Map<String, WidgetBuilder> routes = {
-    '/screen3': (BuildContext context) => Screen3(),
+    Screen3.routeName: (BuildContext context) => Screen3(),
   };
 
   static Route<BuildContext> _getRoute(RouteSettings settings) {
@@ -81,6 +81,8 @@ class _AppTabsState extends State<AppTabs> with SingleTickerProviderStateMixin {
 }
 
 class Screen3 extends StatelessWidget {
+  static const String routeName = '/screen3';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
