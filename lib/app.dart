@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter/foundation.dart';
 //import 'dart:developer';
 
-import 'ui/home/home.dart';
+import 'ui/home/home_widget.dart';
 import 'ui/message/message.dart';
 import 'ui/profile/profile.dart';
 
@@ -44,7 +44,7 @@ class _AppTabsState extends State<AppTabs> with SingleTickerProviderStateMixin {
   int currentIndex = 0;
 
   List<Widget> tabLayout = [
-    Home(),
+    HomeWidget(),
     Message(),
     Profile(),
   ];
