@@ -2,22 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:speech_to_text_app/utils/app_constant.dart';
 
-showSnackbar(GlobalKey<ScaffoldState> scaffoldState, String message,
+void showSnackbar(GlobalKey<ScaffoldState> scaffoldState, String message,
     {MaterialColor materialColor}) {
   if (message.isEmpty) {
     return;
   }
-
   // Find the Scaffold in the Widget tree and use it to show a SnackBar
   scaffoldState.currentState.showSnackBar(
       SnackBar(content: Text(message), backgroundColor: materialColor));
 }
 
-launchURL(String url) async {
+void launchURL(String url) async {
   if (url.isEmpty) {
     return;
   }
-
   if (await canLaunch(url)) {
     await launch(url);
   } else {
@@ -26,9 +24,9 @@ launchURL(String url) async {
 }
 
 class MessageInCenterWidget extends StatelessWidget {
-  final String _message;
+  const MessageInCenterWidget(this._message);
 
-  MessageInCenterWidget(this._message);
+  final String _message;
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-var monthsNames = [
+List<String> monthsNames = [
   'Jan',
   'Feb',
   'Mar',
