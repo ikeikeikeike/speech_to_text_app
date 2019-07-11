@@ -2,9 +2,28 @@ import 'package:flutter/material.dart';
 
 //import 'package:speech_to_text_app/ui/home/home_bloc.dart';
 import 'package:speech_to_text_app/pages/home/home_drawer.dart';
+import 'package:speech_to_text_app/pages/home/home_bottom.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
 //  final TaskBloc _taskBloc = TaskBloc(TaskDB.get());
+
+  TabItem currentTab = TabItem.red;
+  Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
+    TabItem.red: GlobalKey<NavigatorState>(),
+    TabItem.green: GlobalKey<NavigatorState>(),
+    TabItem.blue: GlobalKey<NavigatorState>(),
+  };
+
+  void _selectTab(TabItem tabItem) {
+    setState(() {
+      currentTab = tabItem;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +64,10 @@ class HomePage extends StatelessWidget {
 //        bloc: _taskBloc,
 //        child: TasksPage(),
 //      ),
+      bottomNavigationBar: HomeBottom(
+        currentTab: currentTab,
+        onSelectTab: _selectTab,
+      ),
     );
   }
 
