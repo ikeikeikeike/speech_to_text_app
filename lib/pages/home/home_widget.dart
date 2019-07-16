@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-//import 'package:speech_to_text_app/ui/home/home_bloc.dart';
+import 'package:speech_to_text_app/pages/hots/hots_widget.dart';
 import 'package:speech_to_text_app/pages/home/home_drawer.dart';
-import 'package:speech_to_text_app/pages/home/home_bottom.dart';
+//import 'package:speech_to_text_app/ui/home/home_bloc.dart';
+
+// This is the type used by the popup menu below.
+enum MenuItem { taskCompleted }
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,19 +15,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
 //  final TaskBloc _taskBloc = TaskBloc(TaskDB.get());
 
-  TabItem currentTab = TabItem.red;
-  Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
-    TabItem.red: GlobalKey<NavigatorState>(),
-    TabItem.green: GlobalKey<NavigatorState>(),
-    TabItem.blue: GlobalKey<NavigatorState>(),
-  };
-
-  void _selectTab(TabItem tabItem) {
-    setState(() {
-      currentTab = tabItem;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
 //    final HomeBloc homeBloc = BlocProvider.of(context);
@@ -32,20 +22,14 @@ class HomePageState extends State<HomePage> {
 //      _taskBloc.updateFilters(filter);
 //    });
     return Scaffold(
-      appBar: AppBar(
-        title: StreamBuilder<String>(
-            initialData: 'Today',
-//            stream: homeBloc.title,
-            builder: (context, snapshot) {
-              return Text(snapshot.data);
-            }),
-        actions: <Widget>[buildPopupMenu(context)],
-      ),
+      drawer: HomeDrawer(),
+      body: HotsPage(),
+//      body: BlocProvider(
+//        bloc: _taskBloc,
+//        child: TasksPage(),
+//      ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
+        child: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.orange,
 //        onPressed: () async {
 //          var blocProviderAddTask = BlocProvider(
@@ -58,15 +42,6 @@ class HomePageState extends State<HomePage> {
 //          );
 //          _taskBloc.refresh();
 //        },
-      ),
-      drawer: HomeDrawer(),
-//      body: BlocProvider(
-//        bloc: _taskBloc,
-//        child: TasksPage(),
-//      ),
-      bottomNavigationBar: HomeBottom(
-        currentTab: currentTab,
-        onSelectTab: _selectTab,
       ),
     );
   }
@@ -96,6 +71,3 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
-
-// This is the type used by the popup menu below.
-enum MenuItem { taskCompleted }

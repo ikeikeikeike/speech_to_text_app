@@ -39,18 +39,18 @@ class HomeDrawer extends StatelessWidget {
             ],
             currentAccountPicture: CircleAvatar(
               backgroundColor: Theme.of(context).accentColor,
-              backgroundImage: AssetImage("assets/profile_pic.jpg"),
+              backgroundImage: AssetImage('assets/profile_pic.jpg'),
             ),
           ),
-//          ListTile(
-//              leading: Icon(Icons.inbox),
-//              title: Text("Inbox"),
-//              onTap: () {
+          ListTile(
+              leading: Icon(Icons.inbox),
+              title: Text('Inbox'),
+              onTap: () {
 //                var project = Project.getInbox();
 //                homeBloc.applyFilter(
 //                    project.name, Filter.byProject(project.id));
-//                Navigator.pop(context);
-//              }),
+                Navigator.pop(context);
+              }),
 //          ListTile(
 //              onTap: () {
 //                homeBloc.applyFilter("Today", Filter.byToday());
