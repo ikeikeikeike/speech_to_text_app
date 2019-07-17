@@ -46,6 +46,7 @@ const List<Choice> choices = <Choice>[
   Choice(title: 'BUS', icon: Icons.directions_bus),
   Choice(title: 'TRAIN', icon: Icons.directions_railway),
   Choice(title: 'WALK', icon: Icons.directions_walk),
+  Choice(title: 'ACCESS', icon: Icons.access_alarm),
 ];
 
 class ChoiceCard extends StatelessWidget {

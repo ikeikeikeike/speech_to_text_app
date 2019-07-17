@@ -44,28 +44,28 @@ class HomeDrawer extends StatelessWidget {
           ),
           ListTile(
               leading: Icon(Icons.inbox),
-              title: Text('Inbox'),
+              title: Text('Hots'),
               onTap: () {
 //                var project = Project.getInbox();
 //                homeBloc.applyFilter(
 //                    project.name, Filter.byProject(project.id));
                 Navigator.pop(context);
               }),
-//          ListTile(
-//              onTap: () {
+          ListTile(
+              onTap: () {
 //                homeBloc.applyFilter("Today", Filter.byToday());
-//                Navigator.pop(context);
-//              },
-//              leading: Icon(Icons.calendar_today),
-//              title: Text("Today")),
-//          ListTile(
-//            onTap: () {
+                Navigator.pop(context);
+              },
+              leading: Icon(Icons.calendar_today),
+              title: Text('News')),
+          ListTile(
+            onTap: () {
 //              homeBloc.applyFilter("Next 7 Days", Filter.byNextWeek());
-//              Navigator.pop(context);
-//            },
-//            leading: Icon(Icons.calendar_today),
-//            title: Text("Next 7 Days"),
-//          ),
+              Navigator.pop(context);
+            },
+            leading: Icon(Icons.calendar_today),
+            title: Text('Next 7 Days'),
+          ),
 //          BlocProvider(
 //            bloc: ProjectBloc(ProjectDB.get()),
 //            child: ProjectPage(),
