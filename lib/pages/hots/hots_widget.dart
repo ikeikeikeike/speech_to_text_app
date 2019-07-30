@@ -1,6 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:speech_to_text_app/models/docs.dart';
 
-class HotsPage extends StatelessWidget {
+class HotsPage extends StatefulWidget {
+  @override
+  HotsPageState createState() => HotsPageState();
+}
+
+class HotsPageState extends State<HotsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,19 +42,15 @@ class HotsPage extends StatelessWidget {
 }
 
 class Choice {
-  const Choice({this.title, this.icon});
+  const Choice({this.title, this.type, this.icon});
   final String title;
+  final String type;
   final IconData icon;
 }
 
 const List<Choice> choices = <Choice>[
-  Choice(title: 'CAR', icon: Icons.directions_car),
-  Choice(title: 'BICYCLE', icon: Icons.directions_bike),
-  Choice(title: 'BOAT', icon: Icons.directions_boat),
-  Choice(title: 'BUS', icon: Icons.directions_bus),
-  Choice(title: 'TRAIN', icon: Icons.directions_railway),
-  Choice(title: 'WALK', icon: Icons.directions_walk),
-  Choice(title: 'ACCESS', icon: Icons.access_alarm),
+  Choice(title: 'ARTICLE', type: 'article', icon: Icons.directions_car),
+  Choice(title: 'BLOG', type: 'blog', icon: Icons.directions_bike),
 ];
 
 class ChoiceCard extends StatelessWidget {
@@ -66,9 +70,32 @@ class ChoiceCard extends StatelessWidget {
           children: <Widget>[
             Icon(choice.icon, size: 128.0, color: textStyle.color),
             Text(choice.title, style: textStyle),
+            GestureDetector(
+                child: Text('Click here',
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue)),
+                onTap: () async {
+                  final unko = await getHttp(choice.type);
+                  print(unko);
+                }),
           ],
         ),
       ),
     );
+  }
+}
+
+Future<DocsModel> getHttp(String type) async {
+  final url = 'http://192.168.1.9:8000/v1/documents/?type=$type';
+  final dio = Dio();
+
+  try {
+    final resp = await dio.get(url);
+    return DocsModel.fromJson(resp.data);
+    // ignore: avoid_catches_without_on_clauses
+  } catch (error, stacktrace) {
+    print('Exception occured: $error stackTrace: $stacktrace');
+    return DocsModel.withError('$error');
   }
 }

@@ -46,6 +46,7 @@ part 'docs.g.dart';
 @JsonSerializable()
 class DocsModel {
   List<DocsAttr> data;
+  String error = '';
 
   DocsModel(this.data);
 
@@ -53,6 +54,8 @@ class DocsModel {
       _$DocsModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$DocsModelToJson(this);
+
+  DocsModel.withError(this.error) : data = [];
 }
 
 @JsonSerializable()
