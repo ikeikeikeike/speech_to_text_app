@@ -60,28 +60,126 @@ class ChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.display1;
-    return Card(
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return FutureBuilder(
+      future: getHttp(choice.type),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Text('loading...');
+          default:
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+
+            return docListView(context, snapshot);
+        }
+      },
+    );
+  }
+
+  Widget docListView(BuildContext context, AsyncSnapshot snapshot) {
+    final DocsModel doc = snapshot.data;
+
+    final shape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(16.0),
+      topRight: Radius.circular(16.0),
+      bottomLeft: Radius.circular(2.0),
+      bottomRight: Radius.circular(2.0),
+    ));
+
+    return ListView.builder(
+      itemCount: doc.data.length,
+      itemBuilder: (BuildContext context, int index) {
+        final attr = doc.data[index];
+
+        return Column(
           children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
-            Text(choice.title, style: textStyle),
-            GestureDetector(
-                child: Text('Click here',
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue)),
-                onTap: () async {
-                  final unko = await getHttp(choice.type);
-                  print(unko);
-                }),
+            SizedBox(
+              height: 60,
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                shape: shape,
+                child: InkWell(
+                  onTap: () {
+                    print('Card was tapped');
+                  },
+                  splashColor:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+                  highlightColor: Colors.transparent,
+                  child: docCard(context, attr),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget docCard(BuildContext context, DocsAttr attr) {
+    final theme = Theme.of(context);
+    final titleStyle = theme.textTheme.headline.copyWith(color: Colors.white);
+    final descriptionStyle = theme.textTheme.subhead;
+
+    final children = <Widget>[
+      SizedBox(
+        height: 184.0,
+        child: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: Ink.image(
+                image: NetworkImage(attr.image.toString()),
+                fit: BoxFit.cover,
+                child: Container(),
+              ),
+            ),
+            Positioned(
+              bottom: 16.0,
+              left: 16.0,
+              right: 16.0,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  attr.title,
+                  style: titleStyle,
+                ),
+              ),
+            ),
           ],
         ),
       ),
+      // Description and share/explore buttons.
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+        child: DefaultTextStyle(
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: descriptionStyle,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // three line description
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  attr.explain ?? 'no explain',
+                  style: descriptionStyle.copyWith(color: Colors.black54),
+                ),
+              ),
+              Text(attr.documentType),
+              Text(attr.subtype),
+            ],
+          ),
+        ),
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
     );
   }
 }
