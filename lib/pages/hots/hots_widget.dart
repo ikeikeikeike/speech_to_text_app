@@ -97,7 +97,7 @@ class ChoiceCard extends StatelessWidget {
         return Column(
           children: <Widget>[
             SizedBox(
-              height: 60,
+              height: 300,
               child: Card(
                 clipBehavior: Clip.antiAlias,
                 shape: shape,
@@ -165,7 +165,7 @@ class ChoiceCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  attr.explain ?? 'no explain',
+                  attr.title,
                   style: descriptionStyle.copyWith(color: Colors.black54),
                 ),
               ),
