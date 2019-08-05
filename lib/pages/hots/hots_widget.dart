@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+
 import 'package:speech_to_text_app/models/docs.dart';
+import 'package:speech_to_text_app/pages/hots/hots.dart';
 
 class HotsPage extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class HotsPageState extends State<HotsPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: choices.length,
+        length: hots.length,
         child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -22,16 +22,16 @@ class HotsPageState extends State<HotsPage> {
             title: Text('Tabbed AppBar'),
             bottom: TabBar(
               isScrollable: true,
-              tabs: choices.map<Widget>((Choice choice) {
-                return Tab(text: choice.title);
+              tabs: hots.map<Widget>((Hot hot) {
+                return Tab(text: hot.title);
               }).toList(),
             ),
           ),
           body: TabBarView(
-            children: choices.map<Widget>((Choice choice) {
+            children: hots.map<Widget>((Hot hot) {
               return Padding(
                 padding: EdgeInsets.all(16.0),
-                child: ChoiceCard(choice: choice),
+                child: HotCard(hot: hot),
               );
             }).toList(),
           ),
@@ -41,27 +41,15 @@ class HotsPageState extends State<HotsPage> {
   }
 }
 
-class Choice {
-  const Choice({this.title, this.type, this.icon});
-  final String title;
-  final String type;
-  final IconData icon;
-}
+class HotCard extends StatelessWidget {
+  const HotCard({Key key, this.hot}) : super(key: key);
 
-const List<Choice> choices = <Choice>[
-  Choice(title: 'ARTICLE', type: 'article', icon: Icons.directions_car),
-  Choice(title: 'BLOG', type: 'blog', icon: Icons.directions_bike),
-];
-
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-
-  final Choice choice;
+  final Hot hot;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getHttp(choice.type),
+      future: getHttp(hot.type),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -103,7 +91,7 @@ class ChoiceCard extends StatelessWidget {
                 shape: shape,
                 child: InkWell(
                   onTap: () {
-                    print('Card was tapped');
+                    showAttrPage(context, attr);
                   },
                   splashColor:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
@@ -182,18 +170,228 @@ class ChoiceCard extends StatelessWidget {
       children: children,
     );
   }
+
+  void showAttrPage(BuildContext context, DocsAttr attr) {
+    Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          settings: const RouteSettings(name: '/hots/hot'),
+          builder: (BuildContext context) {
+            return Theme(
+              data: _kTheme.copyWith(platform: Theme.of(context).platform),
+              child: DocAttrPage(hot: attr),
+            );
+          },
+        ));
+  }
 }
 
-Future<DocsModel> getHttp(String type) async {
-  final url = 'http://192.168.1.9:8000/v1/documents/?type=$type';
-  final dio = Dio();
+final ThemeData _kTheme = ThemeData(
+  brightness: Brightness.light,
+  primarySwatch: Colors.teal,
+  accentColor: Colors.redAccent,
+);
 
-  try {
-    final resp = await dio.get(url);
-    return DocsModel.fromJson(resp.data);
-    // ignore: avoid_catches_without_on_clauses
-  } catch (error, stacktrace) {
-    print('Exception occured: $error stackTrace: $stacktrace');
-    return DocsModel.withError('$error');
+const double _kFabHalfSize = 28.0;
+const double _khotPageMaxWidth = 500.0;
+
+class PestoStyle extends TextStyle {
+  const PestoStyle({
+    double fontSize = 12.0,
+    FontWeight fontWeight,
+    Color color = Colors.black87,
+    double letterSpacing,
+    double height,
+  }) : super(
+          inherit: false,
+          color: color,
+          fontFamily: 'Raleway',
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          textBaseline: TextBaseline.alphabetic,
+          letterSpacing: letterSpacing,
+          height: height,
+        );
+}
+
+class DocAttrPage extends StatefulWidget {
+  const DocAttrPage({Key key, this.hot}) : super(key: key);
+
+  final DocsAttr hot;
+
+  @override
+  _DocAttrPageState createState() => _DocAttrPageState();
+}
+
+class _DocAttrPageState extends State<DocAttrPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextStyle menuItemStyle = const PestoStyle(
+      fontSize: 15.0, color: Colors.black54, height: 24.0 / 15.0);
+
+  double _getAppBarHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height * 0.3;
+
+  @override
+  Widget build(BuildContext context) {
+    final appBarHeight = _getAppBarHeight(context);
+    final screenSize = MediaQuery.of(context).size;
+    final fullWidth = screenSize.width < _khotPageMaxWidth;
+    const isFavorite = true;
+
+    return Scaffold(
+      key: _scaffoldKey,
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+            top: 0.0,
+            left: 0.0,
+            right: 0.0,
+            height: appBarHeight + _kFabHalfSize,
+            child: Hero(
+              tag: widget.hot.image.path,
+              child: Image.network(
+                widget.hot.image.toString(),
+                fit: fullWidth ? BoxFit.fitWidth : BoxFit.cover,
+              ),
+            ),
+          ),
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: appBarHeight - _kFabHalfSize,
+                backgroundColor: Colors.transparent,
+                actions: <Widget>[
+                  PopupMenuButton<String>(
+                    onSelected: (String item) {},
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuItem<String>>[
+                          _buildMenuItem(Icons.share, 'Tweet hot'),
+                          _buildMenuItem(Icons.email, 'Email hot'),
+                          _buildMenuItem(Icons.message, 'Message hot'),
+                          _buildMenuItem(Icons.people, 'Share on Facebook'),
+                        ],
+                  ),
+                ],
+                flexibleSpace: const FlexibleSpaceBar(
+                  background: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment(0.0, -1.0),
+                        end: Alignment(0.0, -0.2),
+                        colors: <Color>[Color(0x60000000), Color(0x00000000)],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.only(top: _kFabHalfSize),
+                      width: fullWidth ? null : _khotPageMaxWidth,
+                      child: DocAttrSheet(hot: widget.hot),
+                    ),
+                    Positioned(
+                      right: 16.0,
+                      child: FloatingActionButton(
+                        child: Icon(isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  PopupMenuItem<String> _buildMenuItem(IconData icon, String label) {
+    return PopupMenuItem<String>(
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 24.0),
+            child: Icon(icon, color: Colors.black54),
+          ),
+          Text(label, style: menuItemStyle),
+        ],
+      ),
+    );
+  }
+}
+
+class DocAttrSheet extends StatelessWidget {
+  DocAttrSheet({Key key, this.hot}) : super(key: key);
+
+  final TextStyle titleStyle = const PestoStyle(fontSize: 34.0);
+  final TextStyle descriptionStyle = const PestoStyle(
+      fontSize: 15.0, color: Colors.black54, height: 24.0 / 15.0);
+  final TextStyle itemStyle =
+      const PestoStyle(fontSize: 15.0, height: 24.0 / 15.0);
+  final TextStyle itemAmountStyle = PestoStyle(
+      fontSize: 15.0, color: _kTheme.primaryColor, height: 24.0 / 15.0);
+  final TextStyle headingStyle = const PestoStyle(
+      fontSize: 16.0, fontWeight: FontWeight.bold, height: 24.0 / 15.0);
+
+  final DocsAttr hot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: SafeArea(
+        top: false,
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
+          child: Table(columnWidths: const <int, TableColumnWidth>{
+            0: FixedColumnWidth(64.0),
+          }, children: <TableRow>[
+            TableRow(children: <Widget>[
+              TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Image.network(
+                  hot.image.toString(),
+                  width: 32.0,
+                  height: 32.0,
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Text(hot.title, style: titleStyle),
+              ),
+            ]),
+            TableRow(children: <Widget>[
+              const SizedBox(),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                child: Text(hot.title, style: descriptionStyle),
+              ),
+            ]),
+            TableRow(children: <Widget>[
+              const SizedBox(),
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                child: Text('More 1', style: headingStyle),
+              ),
+            ]),
+            TableRow(children: <Widget>[
+              const SizedBox(),
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
+                child: Text('More 2', style: headingStyle),
+              ),
+            ]),
+          ]),
+        ),
+      ),
+    );
   }
 }
