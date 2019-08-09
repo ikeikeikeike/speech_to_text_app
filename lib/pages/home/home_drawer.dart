@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 //import 'package:speech_to_text_app/bloc/bloc_provider.dart';
 //import 'package:speech_to_text_app/pages/tasks/bloc/task_bloc.dart';
 //import 'package:speech_to_text_app/pages/labels/label_db.dart';
@@ -32,8 +33,11 @@ class HomeDrawer extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute<bool>(
-                          builder: (context) => AboutUsScreen()),
+                      CupertinoPageRoute<bool>(
+                        fullscreenDialog: true,
+//                      MaterialPageRoute<bool>(
+                        builder: (context) => AboutUsScreen(),
+                      ),
                     );
                   })
             ],

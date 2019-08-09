@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:speech_to_text_app/models/docs.dart';
+//import 'package:speech_to_text_app/pages/home/home_drawer.dart';
 import 'package:speech_to_text_app/pages/hots/hots.dart';
 
 class HotsPage extends StatefulWidget {
@@ -12,14 +14,23 @@ class HotsPageState extends State<HotsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+//      builder: (context, child) {
+//        return Scaffold(
+//          drawer: HomeDrawer(),
+//          body: child,
+//        );
+//      },
       home: DefaultTabController(
         length: hots.length,
         child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
-                icon: Icon(Icons.menu, color: Colors.white),
-                onPressed: () => Scaffold.of(context).openDrawer()),
-            title: Text('Tabbed AppBar'),
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
+            title: Center(
+              child: Text('Tabbed AppBar', textAlign: TextAlign.center),
+            ),
             bottom: TabBar(
               isScrollable: true,
               tabs: hots.map<Widget>((Hot hot) {
@@ -174,7 +185,9 @@ class HotCard extends StatelessWidget {
   void showAttrPage(BuildContext context, DocsAttr attr) {
     Navigator.push(
         context,
-        MaterialPageRoute<void>(
+//        MaterialPageRoute<void>(
+        CupertinoPageRoute<void>(
+          fullscreenDialog: false,
           settings: const RouteSettings(name: '/hots/hot'),
           builder: (BuildContext context) {
             return Theme(

@@ -22,7 +22,7 @@ class HomePageState extends State<HomePage> {
 //      _taskBloc.updateFilters(filter);
 //    });
     return Scaffold(
-      drawer: HomeDrawer(),
+      endDrawer: HomeDrawer(),
       body: HotsPage(),
 //      body: BlocProvider(
 //        bloc: _taskBloc,
