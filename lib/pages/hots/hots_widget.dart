@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:speech_to_text_app/models/docs.dart';
 //import 'package:speech_to_text_app/pages/home/home_drawer.dart';
@@ -390,21 +391,39 @@ class DocAttrSheet extends StatelessWidget {
             ]),
             TableRow(children: <Widget>[
               const SizedBox(),
-              Padding(
-                padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                child: Text('More 1', style: headingStyle),
-              ),
-            ]),
-            TableRow(children: <Widget>[
-              const SizedBox(),
-              Padding(
-                padding: const EdgeInsets.only(top: 24.0, bottom: 4.0),
-                child: Text('More 2', style: headingStyle),
-              ),
+              RaisedButton(
+                  child: Text('View Next'),
+                  onPressed: () {
+                    showWebView(context, hot);
+                  }),
             ]),
           ]),
         ),
       ),
     );
+  }
+
+  void showWebView(BuildContext context, DocsAttr hot) {
+    Navigator.push(
+        context,
+//        MaterialPageRoute<void>(
+        CupertinoPageRoute<void>(
+          fullscreenDialog: false,
+          settings: RouteSettings(name: '/hots/hot/webview'),
+          builder: (BuildContext context) {
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                title: Center(
+                  child: Text(hot.title, textAlign: TextAlign.left),
+                ),
+              ),
+              body: WebView(initialUrl: hot.url.toString()),
+            );
+          },
+        ));
   }
 }
