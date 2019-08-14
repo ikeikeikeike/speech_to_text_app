@@ -25,17 +25,12 @@ class HomeDrawer extends StatelessWidget {
             accountEmail: Text('jp.ne.co.jp@gmail.com'),
             otherAccountsPictures: <Widget>[
               IconButton(
-                  icon: Icon(
-                    Icons.info,
-                    color: Colors.white,
-                    size: 36.0,
-                  ),
+                  icon: Icon(Icons.info, color: Colors.white, size: 36.0),
                   onPressed: () {
                     Navigator.push(
                       context,
                       CupertinoPageRoute<bool>(
                         fullscreenDialog: true,
-//                      MaterialPageRoute<bool>(
                         builder: (context) => AboutUsScreen(),
                       ),
                     );
@@ -47,28 +42,36 @@ class HomeDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-              leading: Icon(Icons.inbox),
-              title: Text('Hots'),
-              onTap: () {
+            leading: Icon(Icons.notifications_active),
+            title: Text('通知'),
+            onTap: () {
 //                var project = Project.getInbox();
 //                homeBloc.applyFilter(
 //                    project.name, Filter.byProject(project.id));
-                Navigator.pop(context);
-              }),
-          ListTile(
-              onTap: () {
-//                homeBloc.applyFilter("Today", Filter.byToday());
-                Navigator.pop(context);
-              },
-              leading: Icon(Icons.calendar_today),
-              title: Text('News')),
-          ListTile(
-            onTap: () {
-//              homeBloc.applyFilter("Next 7 Days", Filter.byNextWeek());
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                CupertinoPageRoute<bool>(
+                  fullscreenDialog: true,
+                  builder: (context) => AboutUsScreen(),
+                ),
+              );
             },
-            leading: Icon(Icons.calendar_today),
-            title: Text('Next 7 Days'),
+          ),
+          Divider(
+            height: 2.0,
+          ),
+          ListTile(
+            title: Text('設定'),
+            leading: Icon(Icons.settings),
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute<bool>(
+                  fullscreenDialog: true,
+                  builder: (context) => AboutUsScreen(),
+                ),
+              );
+            },
           ),
 //          BlocProvider(
 //            bloc: ProjectBloc(ProjectDB.get()),

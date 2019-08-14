@@ -13,9 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       theme: ThemeData(
-          accentColor: Colors.orange, primaryColor: const Color(0xFFDE4435)),
+        accentColor: Colors.orange,
+        primaryColor: const Color(0xFFDE4435),
+      ),
       home: HomePage(),
 //        home: BlocProvider(
 //          bloc: HomeBloc(),

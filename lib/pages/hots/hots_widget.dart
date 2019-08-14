@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:speech_to_text_app/pages/home/home_drawer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:speech_to_text_app/models/docs.dart';
@@ -15,20 +16,11 @@ class HotsPageState extends State<HotsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-//      builder: (context, child) {
-//        return Scaffold(
-//          drawer: HomeDrawer(),
-//          body: child,
-//        );
-//      },
       home: DefaultTabController(
         length: hots.length,
         child: Scaffold(
+          drawer: HomeDrawer(),
           appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.menu, color: Colors.white),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-            ),
             title: Center(
               child: Text('Tabbed AppBar', textAlign: TextAlign.center),
             ),
@@ -250,10 +242,14 @@ class _DocAttrPageState extends State<DocAttrPage> {
     final appBarHeight = _getAppBarHeight(context);
     final screenSize = MediaQuery.of(context).size;
     final fullWidth = screenSize.width < _khotPageMaxWidth;
-    const isFavorite = true;
 
     return Scaffold(
       key: _scaffoldKey,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.orange,
+        onPressed: () async {},
+      ),
       body: Stack(
         children: <Widget>[
           Positioned(
@@ -292,7 +288,10 @@ class _DocAttrPageState extends State<DocAttrPage> {
                       gradient: LinearGradient(
                         begin: Alignment(0.0, -1.0),
                         end: Alignment(0.0, -0.2),
-                        colors: <Color>[Color(0x60000000), Color(0x00000000)],
+                        colors: <Color>[
+                          Color(0x60000000),
+                          Color(0x00000000),
+                        ],
                       ),
                     ),
                   ),
@@ -305,15 +304,6 @@ class _DocAttrPageState extends State<DocAttrPage> {
                       padding: const EdgeInsets.only(top: _kFabHalfSize),
                       width: fullWidth ? null : _khotPageMaxWidth,
                       child: DocAttrSheet(hot: widget.hot),
-                    ),
-                    Positioned(
-                      right: 16.0,
-                      child: FloatingActionButton(
-                        child: Icon(isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border),
-                        onPressed: () {},
-                      ),
                     ),
                   ],
                 ),
@@ -362,20 +352,14 @@ class DocAttrSheet extends StatelessWidget {
         top: false,
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
           child: Table(columnWidths: const <int, TableColumnWidth>{
-            0: FixedColumnWidth(64.0),
+            0: FixedColumnWidth(0.0),
           }, children: <TableRow>[
             TableRow(children: <Widget>[
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.middle,
-                child: Image.network(
-                  hot.image.toString(),
-                  width: 32.0,
-                  height: 32.0,
-                  alignment: Alignment.centerLeft,
-                  fit: BoxFit.scaleDown,
-                ),
+                child: const SizedBox(),
               ),
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.middle,
@@ -422,6 +406,11 @@ class DocAttrSheet extends StatelessWidget {
                 ),
               ),
               body: WebView(initialUrl: hot.url.toString()),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add, color: Colors.white),
+                backgroundColor: Colors.orange,
+                onPressed: () async {},
+              ),
             );
           },
         ));
