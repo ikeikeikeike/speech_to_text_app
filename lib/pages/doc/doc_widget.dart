@@ -5,19 +5,19 @@ import 'package:webview_flutter/webview_flutter.dart';
 //import 'package:speech_to_text_app/pages/home/home_drawer.dart';
 import 'package:speech_to_text_app/pages/home/home_drawer.dart';
 import 'package:speech_to_text_app/models/docs.dart';
-import 'package:speech_to_text_app/pages/hots/hots.dart';
+import 'package:speech_to_text_app/pages/doc/doc.dart';
 
-class HotsPage extends StatefulWidget {
+class DocPage extends StatefulWidget {
   @override
-  HotsPageState createState() => HotsPageState();
+  DocPageState createState() => DocPageState();
 }
 
-class HotsPageState extends State<HotsPage> {
+class DocPageState extends State<DocPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: hots.length,
+        length: docs.length,
         child: Scaffold(
           drawer: HomeDrawer(),
           appBar: AppBar(
@@ -26,16 +26,16 @@ class HotsPageState extends State<HotsPage> {
             ),
             bottom: TabBar(
               isScrollable: true,
-              tabs: hots.map<Widget>((Hot hot) {
-                return Tab(text: hot.title);
+              tabs: docs.map<Widget>((Doc doc) {
+                return Tab(text: doc.title);
               }).toList(),
             ),
           ),
           body: TabBarView(
-            children: hots.map<Widget>((Hot hot) {
+            children: docs.map<Widget>((Doc doc) {
               return Padding(
                 padding: EdgeInsets.all(16.0),
-                child: HotCard(hot: hot),
+                child: DocCard(doc: doc),
               );
             }).toList(),
           ),
@@ -45,19 +45,19 @@ class HotsPageState extends State<HotsPage> {
   }
 }
 
-class HotCard extends StatefulWidget {
-  HotCard({Key key, this.hot}) : super(key: key);
+class DocCard extends StatefulWidget {
+  DocCard({Key key, this.doc}) : super(key: key);
 
-  final Hot hot;
+  final Doc doc;
 
   @override
-  HotCardState createState() => HotCardState();
+  DocCardState createState() => DocCardState();
 }
 
-class HotCardState extends State<HotCard> {
+class DocCardState extends State<DocCard> {
   final ScrollController _scroller = ScrollController();
 
-  Future<DocsModel> hots;
+  Future<DocsModel> doc;
   bool isPerformingRequest = false;
 
   @override
@@ -66,11 +66,11 @@ class HotCardState extends State<HotCard> {
 
     _scroller.addListener(() {
       if (_scroller.position.pixels == _scroller.position.maxScrollExtent) {
-        _moreHots();
+        _moreDoc();
       }
     });
 
-    hots = getHttp(widget.hot.type);
+    doc = getHttp(widget.doc.type);
   }
 
   @override
@@ -79,13 +79,13 @@ class HotCardState extends State<HotCard> {
     super.dispose();
   }
 
-  void _moreHots() async {
+  void _moreDoc() async {
     if (!isPerformingRequest) {
       setState(() => isPerformingRequest = true);
 
-      final resp = getHttp(widget.hot.type);
+      final resp = getHttp(widget.doc.type);
       setState(() {
-        resp.then((r1) => hots.then((r2) => r2.data.addAll(r1.data)));
+        resp.then((r1) => doc.then((r2) => r2.data.addAll(r1.data)));
         isPerformingRequest = false;
       });
     }
@@ -94,7 +94,7 @@ class HotCardState extends State<HotCard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: hots,
+      future: doc,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -224,11 +224,11 @@ class HotCardState extends State<HotCard> {
 //        MaterialPageRoute<void>(
         CupertinoPageRoute<void>(
           fullscreenDialog: false,
-          settings: const RouteSettings(name: '/hots/hot'),
+          settings: const RouteSettings(name: '/doc/doc'),
           builder: (BuildContext context) {
             return Theme(
               data: _kTheme.copyWith(platform: Theme.of(context).platform),
-              child: DocAttrPage(hot: attr),
+              child: DocAttrPage(attr: attr),
             );
           },
         ));
@@ -264,9 +264,9 @@ class PestoStyle extends TextStyle {
 }
 
 class DocAttrPage extends StatefulWidget {
-  const DocAttrPage({Key key, this.hot}) : super(key: key);
+  const DocAttrPage({Key key, this.attr}) : super(key: key);
 
-  final DocsAttr hot;
+  final DocsAttr attr;
 
   @override
   _DocAttrPageState createState() => _DocAttrPageState();
@@ -301,9 +301,9 @@ class _DocAttrPageState extends State<DocAttrPage> {
             right: 0.0,
             height: appBarHeight + _kFabHalfSize,
             child: Hero(
-              tag: widget.hot.image.path,
+              tag: widget.attr.image.path,
               child: Image.network(
-                widget.hot.image.toString(),
+                widget.attr.image.toString(),
                 fit: fullWidth ? BoxFit.fitWidth : BoxFit.cover,
               ),
             ),
@@ -346,7 +346,7 @@ class _DocAttrPageState extends State<DocAttrPage> {
                     Container(
                       padding: const EdgeInsets.only(top: _kFabHalfSize),
                       width: fullWidth ? null : _khotPageMaxWidth,
-                      child: DocAttrSheet(hot: widget.hot),
+                      child: DocAttrSheet(attr: widget.attr),
                     ),
                   ],
                 ),
@@ -374,7 +374,7 @@ class _DocAttrPageState extends State<DocAttrPage> {
 }
 
 class DocAttrSheet extends StatelessWidget {
-  DocAttrSheet({Key key, this.hot}) : super(key: key);
+  DocAttrSheet({Key key, this.attr}) : super(key: key);
 
   final TextStyle titleStyle = const PestoStyle(fontSize: 34.0);
   final TextStyle descriptionStyle = const PestoStyle(
@@ -386,7 +386,7 @@ class DocAttrSheet extends StatelessWidget {
   final TextStyle headingStyle = const PestoStyle(
       fontSize: 16.0, fontWeight: FontWeight.bold, height: 24.0 / 15.0);
 
-  final DocsAttr hot;
+  final DocsAttr attr;
 
   @override
   Widget build(BuildContext context) {
@@ -406,14 +406,14 @@ class DocAttrSheet extends StatelessWidget {
               ),
               TableCell(
                 verticalAlignment: TableCellVerticalAlignment.middle,
-                child: Text(hot.title, style: titleStyle),
+                child: Text(attr.title, style: titleStyle),
               ),
             ]),
             TableRow(children: <Widget>[
               const SizedBox(),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                child: Text(hot.title, style: descriptionStyle),
+                child: Text(attr.title, style: descriptionStyle),
               ),
             ]),
             TableRow(children: <Widget>[
@@ -421,7 +421,7 @@ class DocAttrSheet extends StatelessWidget {
               RaisedButton(
                   child: Text('View Next'),
                   onPressed: () {
-                    showWebView(context, hot);
+                    showWebView(context, attr);
                   }),
             ]),
           ]),
@@ -436,7 +436,7 @@ class DocAttrSheet extends StatelessWidget {
 //        MaterialPageRoute<void>(
         CupertinoPageRoute<void>(
           fullscreenDialog: false,
-          settings: RouteSettings(name: '/hots/hot/webview'),
+          settings: RouteSettings(name: '/doc/hot/webview'),
           builder: (BuildContext context) {
             return Scaffold(
               appBar: AppBar(

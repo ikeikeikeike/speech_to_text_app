@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:speech_to_text_app/models/docs.dart';
 
-class Hot {
-  const Hot({this.title, this.type, this.icon});
+class Doc {
+  const Doc({this.title, this.type, this.icon});
   final String title;
   final String type;
   final IconData icon;
 }
 
-const List<Hot> hots = <Hot>[
-  Hot(title: 'ARTICLE', type: 'article', icon: Icons.directions_car),
-  Hot(title: 'BLOG', type: 'blog', icon: Icons.directions_bike),
+const List<Doc> docs = <Doc>[
+  Doc(title: 'ARTICLE', type: 'article', icon: Icons.directions_car),
+  Doc(title: 'BLOG', type: 'blog', icon: Icons.directions_bike),
 ];
 
 Future<DocsModel> getHttp(String type) async {

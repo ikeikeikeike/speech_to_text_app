@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:speech_to_text_app/pages/hots/hots_widget.dart';
+import 'package:speech_to_text_app/pages/doc/doc_widget.dart';
 //import 'package:speech_to_text_app/ui/home/home_bloc.dart';
 
 enum MenuItem { taskCompleted }
@@ -20,7 +20,7 @@ class HomePageState extends State<HomePage> {
 //      _taskBloc.updateFilters(filter);
 //    });
     return Scaffold(
-      body: HotsPage(),
+      body: DocPage(),
 //      body: BlocProvider(
 //        bloc: _taskBloc,
 //        child: TasksPage(),
