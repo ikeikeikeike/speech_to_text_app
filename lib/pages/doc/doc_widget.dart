@@ -22,8 +22,9 @@ class DocPageState extends State<DocPage> {
         child: Scaffold(
           drawer: HomeDrawer(),
           appBar: AppBar(
+            centerTitle: true,
             title: Center(
-              child: Text('Tabbed AppBar', textAlign: TextAlign.center),
+              child: Text('Tabbed AppBar'),
             ),
             bottom: TabBar(
               isScrollable: true,
@@ -454,7 +455,11 @@ class DocAttrSheet extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                 ),
                 title: Center(
-                  child: Text(attr.title, textAlign: TextAlign.left),
+                  child: Text(
+                    attr.title,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 16.0),
+                  ),
                 ),
               ),
               body: WebView(initialUrl: attr.url.toString()),
