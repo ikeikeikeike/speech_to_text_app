@@ -6,6 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:speech_to_text_app/pages/home/home_drawer.dart';
 import 'package:speech_to_text_app/models/docs.dart';
 import 'package:speech_to_text_app/pages/doc/doc.dart';
+import 'package:speech_to_text_app/pages/doc/add_doc.dart';
 
 class DocPage extends StatefulWidget {
   @override
@@ -291,7 +292,15 @@ class _DocAttrPageState extends State<DocAttrPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.orange,
-        onPressed: () async {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute<bool>(
+              fullscreenDialog: true,
+              builder: (context) => AddDoc(attr: widget.attr),
+            ),
+          );
+        },
       ),
       body: Stack(
         children: <Widget>[
@@ -430,13 +439,13 @@ class DocAttrSheet extends StatelessWidget {
     );
   }
 
-  void showWebView(BuildContext context, DocsAttr hot) {
+  void showWebView(BuildContext context, DocsAttr attr) {
     Navigator.push(
         context,
 //        MaterialPageRoute<void>(
         CupertinoPageRoute<void>(
           fullscreenDialog: false,
-          settings: RouteSettings(name: '/doc/hot/webview'),
+          settings: RouteSettings(name: '/doc/doc/webview'),
           builder: (BuildContext context) {
             return Scaffold(
               appBar: AppBar(
@@ -445,14 +454,22 @@ class DocAttrSheet extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                 ),
                 title: Center(
-                  child: Text(hot.title, textAlign: TextAlign.left),
+                  child: Text(attr.title, textAlign: TextAlign.left),
                 ),
               ),
-              body: WebView(initialUrl: hot.url.toString()),
+              body: WebView(initialUrl: attr.url.toString()),
               floatingActionButton: FloatingActionButton(
                 child: Icon(Icons.add, color: Colors.white),
                 backgroundColor: Colors.orange,
-                onPressed: () async {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute<bool>(
+                      fullscreenDialog: true,
+                      builder: (context) => AddDoc(attr: attr),
+                    ),
+                  );
+                },
               ),
             );
           },
