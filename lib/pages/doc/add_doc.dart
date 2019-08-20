@@ -12,6 +12,7 @@ class AddDoc extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text('チェック', style: TextStyle(fontSize: 16.0)),
       ),
@@ -25,12 +26,13 @@ class AddDoc extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextField(
-                      maxLines: 20,
+                      maxLines: 8,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(
-                          hintText: 'Enter your text here',
-                          border: OutlineInputBorder(),
-                          labelText: attr.title),
+                        labelText: attr.title,
+                        hintText: 'Enter your text here',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ],
                 ),
@@ -41,7 +43,7 @@ class AddDoc extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0, left: 16.0),
-                      child: Text('Ask Question ?',
+                      child: Text('Socials',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -50,7 +52,7 @@ class AddDoc extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
                             icon: Image.asset(
@@ -62,7 +64,18 @@ class AddDoc extends StatelessWidget {
                           IconButton(
                             icon: Image.asset('assets/facebook_logo.png'),
                             onPressed: () => launchURL(FACEBOOK_URL),
-                          )
+                          ),
+                          Spacer(),
+                          RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            textColor: Colors.white,
+                            color: Colors.blue,
+                            child: Text('CHECK'),
+                            onPressed: () {},
+                          ),
                         ],
                       ),
                     ),

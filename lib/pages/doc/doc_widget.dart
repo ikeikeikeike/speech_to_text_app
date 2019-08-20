@@ -294,13 +294,17 @@ class _DocAttrPageState extends State<DocAttrPage> {
         child: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.orange,
         onPressed: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute<bool>(
-              fullscreenDialog: true,
-              builder: (context) => AddDoc(attr: widget.attr),
-            ),
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (BuildContext context) => AddDoc(attr: widget.attr),
           );
+//          Navigator.push(
+//            context,
+//            CupertinoPageRoute<bool>(
+//              fullscreenDialog: true,
+//              builder: (context) => AddDoc(attr: widget.attr),
+//            ),
+//          );
         },
       ),
       body: Stack(
@@ -467,13 +471,17 @@ class DocAttrSheet extends StatelessWidget {
                 child: Icon(Icons.add, color: Colors.white),
                 backgroundColor: Colors.orange,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute<bool>(
-                      fullscreenDialog: true,
-                      builder: (context) => AddDoc(attr: attr),
-                    ),
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) => AddDoc(attr: attr),
                   );
+//                  Navigator.push(
+//                    context,
+//                    CupertinoPageRoute<bool>(
+//                      fullscreenDialog: true,
+//                      builder: (context) => AddDoc(attr: attr),
+//                    ),
+//                  );
                 },
               ),
             );
