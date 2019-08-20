@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:speech_to_text_app/pages/home/home_drawer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'package:speech_to_text_app/models/docs.dart';
 //import 'package:speech_to_text_app/pages/home/home_drawer.dart';
+import 'package:speech_to_text_app/pages/home/home_drawer.dart';
+import 'package:speech_to_text_app/models/docs.dart';
 import 'package:speech_to_text_app/pages/hots/hots.dart';
 
 class HotsPage extends StatefulWidget {
@@ -45,34 +45,76 @@ class HotsPageState extends State<HotsPage> {
   }
 }
 
-class HotCard extends StatelessWidget {
-  const HotCard({Key key, this.hot}) : super(key: key);
+class HotCard extends StatefulWidget {
+  HotCard({Key key, this.hot}) : super(key: key);
 
   final Hot hot;
 
   @override
+  HotCardState createState() => HotCardState();
+}
+
+class HotCardState extends State<HotCard> {
+  final ScrollController _scroller = ScrollController();
+
+  Future<DocsModel> hots;
+  bool isPerformingRequest = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scroller.addListener(() {
+      if (_scroller.position.pixels == _scroller.position.maxScrollExtent) {
+        _moreHots();
+      }
+    });
+
+    hots = getHttp(widget.hot.type);
+  }
+
+  @override
+  void dispose() {
+    _scroller.dispose();
+    super.dispose();
+  }
+
+  void _moreHots() async {
+    if (!isPerformingRequest) {
+      setState(() => isPerformingRequest = true);
+
+      final resp = getHttp(widget.hot.type);
+      setState(() {
+        resp.then((r1) => hots.then((r2) => r2.data.addAll(r1.data)));
+        isPerformingRequest = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getHttp(hot.type),
+      future: hots,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:
-            return Text('loading...');
+            return Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            );
           default:
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
 
-            return docListView(context, snapshot);
+            return docListView(context, snapshot.data);
         }
       },
     );
   }
 
-  Widget docListView(BuildContext context, AsyncSnapshot snapshot) {
-    final DocsModel doc = snapshot.data;
-
+  Widget docListView(BuildContext context, DocsModel doc) {
     final shape = RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
       topLeft: Radius.circular(16.0),
@@ -82,6 +124,7 @@ class HotCard extends StatelessWidget {
     ));
 
     return ListView.builder(
+      controller: _scroller,
       itemCount: doc.data.length,
       itemBuilder: (BuildContext context, int index) {
         final attr = doc.data[index];

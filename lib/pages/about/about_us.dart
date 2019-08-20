@@ -66,7 +66,7 @@ class AboutUsScreen extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0, left: 16.0),
-                      child: Text("Ask Question ?",
+                      child: Text('Ask Question ?',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
